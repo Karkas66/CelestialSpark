@@ -41,11 +41,19 @@ typedef struct _INSTANCE {
         // kernel32.dll
         //
         D_API( LoadLibraryW )
+	D_API( VirtualAlloc )
 
         //
         // User32.dll
         //
         D_API( MessageBoxW )
+	D_API( MessageBoxA )
+
+        D_API( WSAStartup )
+        D_API( socket )
+	D_API( connect )
+        D_API( recv )
+        D_API( gethostbyname )
 
     } Win32;
 
@@ -53,6 +61,7 @@ typedef struct _INSTANCE {
         PVOID Ntdll;
         PVOID Kernel32;
         PVOID User32;
+	PVOID ws2_32;
     } Modules;
 
 } INSTANCE, *PINSTANCE;
