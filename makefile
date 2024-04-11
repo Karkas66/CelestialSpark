@@ -3,7 +3,7 @@ MAKEFLAGS += "-s -j 16"
 ##
 ## Project name
 ##
-Project := stardust
+Project := CelestialSpark
 
 ##
 ## Compilers
@@ -59,7 +59,7 @@ $(STAR-OBJ):
 ##
 asm-x64:
 	@ echo "[*] compile assembly files"
-	@ nasm -f win64 asm/x64/Stardust.asm -o bin/obj/asm_Stardust.x64.o
+	@ nasm -f win64 asm/x64/CelestialSpark.asm -o bin/obj/asm_CelestialSpark.x64.o
 
 ##
 ## Clean object files and other binaries
