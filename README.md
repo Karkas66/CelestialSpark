@@ -1,4 +1,4 @@
-# CelestialSpark
+# CelestialSpark V2
 
 A modern 64-bit position independent meterpreter and Sliver compatible reverse_TCP Staging Shellcode based on Cracked5piders Stardust
 
